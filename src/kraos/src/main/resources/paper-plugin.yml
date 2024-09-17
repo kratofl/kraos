@@ -1,0 +1,4 @@
+name: kraos
+version: '${project.version}'
+main: kratofl.kraos.Main
+api-version: '1.21'
