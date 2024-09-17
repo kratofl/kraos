@@ -1,0 +1,11 @@
+name: kraos
+version: ${version}
+main: github.kratofl.kraos.Kraos
+api-version: '1.21'
+authors: [Kratofl, Dm4urer]
+
+commands:
+  home:
+    description: "Command to teleport to player specific homes"
+    usage: "/home <list> | <add/delete> <Name>"
+    aliases: [h]

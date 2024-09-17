@@ -6,36 +6,30 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
 public class HomeCommand implements CommandExecutor {
 
     @Override
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
-
-        if (!(commandSender instanceof Player)) {
-            commandSender.sendMessage("Invalid sender!");
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String s, @NotNull String[] args) {
+        if (!(sender instanceof Player)) {
+            sender.sendMessage("Invalid sender!");
             return false;
         }
 
-        Player p = (Player) commandSender;
-
+        Player p = (Player) sender;
         if (args.length == 0) {
             //TODO: First home
             return true;
         }
 
         String actionName = args[0];
-
         if (args.length != 1 && args.length != 2) {
-            p.sendMessage(command.getName() + " <list>");
-            p.sendMessage(command.getName() + " <add/delete> <Name>");
+            p.sendMessage(cmd.getName() + " <list>");
+            p.sendMessage(cmd.getName() + " <add/delete> <Name>");
             return false;
         }
-
         if (args.length == 1) {
             if(actionName.equalsIgnoreCase("add") || actionName.equalsIgnoreCase("delete")){
-                p.sendMessage(command.getName() + " <add/delete> <Name>");
+                p.sendMessage(cmd.getName() + " <add/delete> <Name>");
                 return false;
             }
 
@@ -44,30 +38,27 @@ public class HomeCommand implements CommandExecutor {
                 return true;
             }
 
+            String homeName = actionName;
             //TODO: Tp to home
 
-            String homeName = actionName;
-
-
-        } else if (args.length == 2) {
-            String homeName = args[1];
-            if (actionName.equalsIgnoreCase("add")) {
-                if (homeName.equalsIgnoreCase("list")) {
-                    p.sendMessage("You are not allowed to name your home list!");
-                    return false;
-                }
-                //TODO: homes adden
-                return true;
-            }
-            if (actionName.equalsIgnoreCase("delete")) {
-                //TODO: homes deleten
-                return true;
-            }
-
-
+            return true;
         }
-        p.sendMessage("Invalid arguments!");
 
+        String homeName = args[1];
+        if (actionName.equalsIgnoreCase("add")) {
+            if (homeName.equalsIgnoreCase("list")) {
+                p.sendMessage("You are not allowed to name your home list!");
+                return false;
+            }
+            //TODO: homes adden
+            return true;
+        }
+        if (actionName.equalsIgnoreCase("delete")) {
+            //TODO: homes deleten
+            return true;
+        }
+
+        p.sendMessage("Invalid arguments!");
         return false;
     }
 }
