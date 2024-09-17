@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/kraos.iml" filepath="$PROJECT_DIR$/kraos.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/kraos.main.iml" filepath="$PROJECT_DIR$/.idea/modules/kraos.main.iml" />
     </modules>
   </component>
 </project>

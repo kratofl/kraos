@@ -1,4 +1,4 @@
 name: kraos
 version: '1.0-SNAPSHOT'
-main: kratofl.kraos.Main
+main: github.kratofl.kraos.Kraos
 api-version: '1.21'
