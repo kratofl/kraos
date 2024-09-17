@@ -37,6 +37,7 @@ gradle/wrapper/gradle-wrapper.jar
 
 # macOS
 *.DS_Store
+._*
 
 # Linux
 *.swp
