@@ -2,3 +2,7 @@ name: kraos
 version: '1.0-SNAPSHOT'
 main: github.kratofl.kraos.Kraos
 api-version: '1.21'
+commands:
+  home:
+    description: tp to your home
+    parameters: <list> | <add/delete> <Name>
