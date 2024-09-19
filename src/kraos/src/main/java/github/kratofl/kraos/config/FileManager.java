@@ -11,8 +11,8 @@ public class FileManager {
         if (!file.exists()) {
             try {
                 file.createNewFile();
-            } catch (IOException ignored) {
-
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
         return YamlConfiguration.loadConfiguration(file);
@@ -21,8 +21,8 @@ public class FileManager {
     public static void saveConfig(FileConfiguration config, File file) {
         try {
             config.save(file);
-        } catch (IOException ignored) {
-
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

@@ -12,7 +12,6 @@ public class PlayerData {
     private final static HashMap<UUID, Location> lastPlayerCoordinates = new HashMap<>();
 
     public static @Nullable Location getPlayersLastCoordinates(Player player) {
-
         return lastPlayerCoordinates.get(player.getUniqueId());
     }
 

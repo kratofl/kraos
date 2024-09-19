@@ -90,7 +90,7 @@ public class HomeCommand implements CommandExecutor {
         }
 
         if (actionName.equalsIgnoreCase("delete")) {
-            if (deleteHome(p.getUniqueId(), homeName)) {
+            if (!deleteHome(p.getUniqueId(), homeName)) {
                 p.sendMessage("No home to delete");
                 return true;
             }
@@ -114,7 +114,6 @@ public class HomeCommand implements CommandExecutor {
     private boolean doesHomeExist(UUID playerUUID, String homeName) {
         File file = new File(Kraos.getPluginInstance().getDataFolder(), playerUUID.toString() + ".yml");
         FileConfiguration config = FileManager.loadConfig(file);
-
         return config.contains(homeName);
     }
 
@@ -131,7 +130,7 @@ public class HomeCommand implements CommandExecutor {
         File file = new File(Kraos.getPluginInstance().getDataFolder(), playerUUID.toString() + ".yml");
         FileConfiguration config = FileManager.loadConfig(file);
 
-        if (doesHomeExist(playerUUID, homeName)) {
+        if (!doesHomeExist(playerUUID, homeName)) {
             return false;
         }
 
