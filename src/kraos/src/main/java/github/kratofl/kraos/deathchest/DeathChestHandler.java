@@ -4,6 +4,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -15,11 +17,18 @@ public class DeathChestHandler {
     private static void addDeathChest(DeathChestModel deathChestModel) {
         DEATH_CHESTS.add(deathChestModel);
     }
-    private static Optional<DeathChestModel> getDeathChest(Location location) {
-        return DEATH_CHESTS.stream().filter(x -> x.getLocation() == location).findFirst();
+    public static Optional<DeathChestModel> getDeathChest(Location location) {
+        return DEATH_CHESTS.stream().filter(x -> x.getLocation().equals(location)).findFirst();
+    }
+    public static ArrayList<DeathChestModel>  getDeathChests() {
+        return DEATH_CHESTS;
     }
     private static void removeDeathChest(DeathChestModel deathChestModel) {
-        DEATH_CHESTS.removeIf(x -> x.getLocation() == deathChestModel.getLocation() && x.getOwner() == deathChestModel.getOwner());
+        DEATH_CHESTS.removeIf(x -> x.getLocation().equals(deathChestModel.getLocation()) && x.getOwner().getUniqueId().equals(deathChestModel.getOwner().getUniqueId()));
+    }
+
+    public static boolean blockIsADeathChest(Location location) {
+        return DEATH_CHESTS.stream().anyMatch(x -> x.getLocation().equals(location));
     }
 
     public static void spawnDeathChest(Player player) {
@@ -28,7 +37,14 @@ public class DeathChestHandler {
         Location deathLocation = player.getLocation();
         Location deathChestLocation = getHighestVerticalLocationPossible(deathLocation);
         deathChestLocation.getBlock().setType(DeathChestModel.MATERIAL);
-        addDeathChest(new DeathChestModel(player));
+
+        Inventory deathChestInventory = Bukkit.createInventory(null, 5*9);
+        for(ItemStack item : player.getInventory().getContents()) {
+            if(item != null)
+                deathChestInventory.addItem(item);
+        }
+
+        addDeathChest(new DeathChestModel(deathChestInventory, deathChestLocation, player));
         player.sendMessage("Your death chest has been spawned at: " + locationToString(deathChestLocation));
     }
     public static void destroyDeathChest(Location location, Player player) {
@@ -38,20 +54,28 @@ public class DeathChestHandler {
         }
 
         DeathChestModel deathChestModel = deathChest.get();
-        if (player.getUniqueId() != deathChestModel.getOwner().getUniqueId()) {
+        if (!player.getUniqueId().equals(deathChestModel.getOwner().getUniqueId())) {
             player.sendMessage("This is not your death chest");
             return;
         }
 
         deathChestModel.getLocation().getBlock().setType(Material.AIR);
+        ItemStack[] items = deathChestModel.getInventory().getContents();
+        for (int i = 0; i < items.length; i++) {
+            if (items[i] == null)
+                continue;
+
+            deathChestModel.getLocation().getWorld().dropItem(deathChestModel.getLocation(), items[i]);
+        }
         removeDeathChest(deathChestModel);
     }
 
     private static Location getHighestVerticalLocationPossible(Location deathLocation) {
-        int maxHeight = deathLocation.getWorld().getMaxHeight();
+        int maxHeight = deathLocation.getWorld().getMaxHeight() - 1;
         Location possibleLocation = deathLocation.getWorld().getHighestBlockAt(deathLocation).getLocation();
-        if (possibleLocation.getY() == maxHeight) {
-            Bukkit.getConsoleSender().sendMessage("Highest block");
+        // Go up until you see air
+        // If highest block reached = deathLocation.getWorld().getHighestBlockAt(deathLocation).getLocation();
+        if (possibleLocation.getY() >= maxHeight) {
             return possibleLocation;
         }
         return possibleLocation.add(0, 1, 0);

@@ -48,7 +48,7 @@ public class PlayerDeathListener implements Listener {
         PlayerData.setPlayersLastCoordinates(player, player.getLocation());
         event.deathMessage(deathMessage);
 
-        event.getDrops().removeAll(event.getDrops());
         DeathChestHandler.spawnDeathChest(player);
+        event.getDrops().removeAll(event.getDrops());
     }
 }

@@ -2,6 +2,7 @@ package github.kratofl.kraos.listeners.block;
 
 import github.kratofl.kraos.deathchest.DeathChestHandler;
 import github.kratofl.kraos.deathchest.DeathChestModel;
+import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,7 +17,9 @@ public class BlockBreakListener implements Listener {
         if (block.getType() != DeathChestModel.MATERIAL)
             return;
 
-        event.setCancelled(true);
-        DeathChestHandler.destroyDeathChest(block.getLocation(), event.getPlayer());
+        if (DeathChestHandler.blockIsADeathChest(block.getLocation())) {
+            event.setCancelled(true);
+            DeathChestHandler.destroyDeathChest(block.getLocation(), event.getPlayer());
+        }
     }
 }
