@@ -9,3 +9,7 @@ commands:
     description: "Command to teleport to player specific homes"
     usage: "/home <list> | <add/delete> <Name>"
     aliases: [h]
+  back:
+    description: "Teleport to the last location, where you teleported from"
+    usage: "/back"
+    aliases: [ b ]

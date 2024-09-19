@@ -2,6 +2,7 @@ package github.kratofl.kraos.commands;
 
 import github.kratofl.kraos.Kraos;
 import github.kratofl.kraos.config.FileManager;
+import github.kratofl.kraos.player.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -22,21 +23,17 @@ public class HomeCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
-
         if (!(commandSender instanceof Player)) {
             commandSender.sendMessage("Invalid sender!");
             return false;
         }
 
-        Player p = (Player) commandSender;
-
         if (args.length == 0) {
-            //TODO: First home
             return true;
         }
 
+        Player p = (Player) commandSender;
         String actionName = args[0];
-
         if (args.length != 1 && args.length != 2) {
             p.sendMessage(command.getName() + " <list>");
             p.sendMessage(command.getName() + " <add/delete> <Name>");
@@ -48,69 +45,58 @@ public class HomeCommand implements CommandExecutor {
                 p.sendMessage(command.getName() + " <add/delete> <Name>");
                 return false;
             }
-
             if (actionName.equalsIgnoreCase("list")) {
-                //TODO: homes auflisten
-
                 List<String> homeNames = getAllHomes(p.getUniqueId());
 
-                if (homeNames.size() == 0) {
+                if (homeNames.isEmpty()) {
                     p.sendMessage("Du wichser hast keine homes!");
-                    return false;
+                    return true;
                 }
 
                 p.sendMessage("Your homes are:");
                 for (String homeName : homeNames) {
                     p.sendMessage(homeName);
                 }
-
                 return true;
             }
 
-            //TODO: Tp to home
-
-            String homeName = actionName;
-
-            Location location = goToHome(p.getUniqueId(), homeName, p);
-
+            Location location = goToHome(p.getUniqueId(), actionName, p);
             if (location == null) {
                 p.sendMessage("There has been a problem with your home");
-                return false;
+                return true;
             }
-
+            PlayerData.setPlayersLastCoordinates(p, p.getLocation());
             p.teleport(location);
-            p.sendMessage("You have been teleported to: " + homeName);
-
+            p.sendMessage("You have been teleported to: " + actionName);
             return true;
 
-        } else if (args.length == 2) {
-            String homeName = args[1];
-            if (actionName.equalsIgnoreCase("add")) {
-                if (homeName.equalsIgnoreCase("list")) {
-                    p.sendMessage("You are not allowed to name your home list!");
-                    return false;
-                }
-
-                if (doesHomeExist(p.getUniqueId(), homeName)) {
-                    p.sendMessage("Home already exists!");
-                    return false;
-                }
-
-                saveHome(p.getUniqueId(), homeName, p.getLocation());
-                p.sendMessage("Home " + homeName + " gesetzt!");
-                return true;
-            }
-            if (actionName.equalsIgnoreCase("delete")) {
-                //TODO: homes deleten
-                if (deleteHome(p.getUniqueId(), homeName) == false) {
-                    p.sendMessage("No home to delete");
-                }
-                p.sendMessage("Home " + homeName + " has been deleted");
-                return true;
-            }
         }
-        p.sendMessage("Invalid arguments!");
 
+        String homeName = args[1];
+        if (actionName.equalsIgnoreCase("add")) {
+            if (homeName.equalsIgnoreCase("list")) {
+                p.sendMessage("You are not allowed to name your home list!");
+                return true;
+            }
+
+            if (doesHomeExist(p.getUniqueId(), homeName)) {
+                p.sendMessage("Home already exists!");
+                return true;
+            }
+
+            saveHome(p.getUniqueId(), homeName, p.getLocation());
+            p.sendMessage("Home " + homeName + " gesetzt!");
+            return true;
+        }
+
+        if (actionName.equalsIgnoreCase("delete")) {
+            if (deleteHome(p.getUniqueId(), homeName)) {
+                p.sendMessage("No home to delete");
+                return true;
+            }
+            p.sendMessage("Home " + homeName + " has been deleted");
+            return true;
+        }
         return false;
     }
 
@@ -129,10 +115,7 @@ public class HomeCommand implements CommandExecutor {
         File file = new File(Kraos.getPluginInstance().getDataFolder(), playerUUID.toString() + ".yml");
         FileConfiguration config = FileManager.loadConfig(file);
 
-        if (config.contains(homeName)) {
-            return true;
-        }
-        return false;
+        return config.contains(homeName);
     }
 
     private List<String> getAllHomes(UUID playerUUID) {
@@ -148,7 +131,7 @@ public class HomeCommand implements CommandExecutor {
         File file = new File(Kraos.getPluginInstance().getDataFolder(), playerUUID.toString() + ".yml");
         FileConfiguration config = FileManager.loadConfig(file);
 
-        if (doesHomeExist(playerUUID, homeName) == false) {
+        if (doesHomeExist(playerUUID, homeName)) {
             return false;
         }
 
