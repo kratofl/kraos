@@ -2,6 +2,7 @@ package github.kratofl.kraos;
 
 import github.kratofl.kraos.commands.BackCommand;
 import github.kratofl.kraos.commands.HomeCommand;
+import github.kratofl.kraos.listeners.block.BlockBreakListener;
 import github.kratofl.kraos.listeners.player.PlayerDeathListener;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
@@ -15,6 +16,7 @@ public final class Kraos extends JavaPlugin {
         Bukkit.getPluginCommand("back").setExecutor(new BackCommand());
 
         getServer().getPluginManager().registerEvents(new PlayerDeathListener(), this);
+        getServer().getPluginManager().registerEvents(new BlockBreakListener(), this);
     }
 
     @Override

@@ -1,15 +1,12 @@
 package github.kratofl.kraos.listeners.player;
 
+import github.kratofl.kraos.deathchest.DeathChestHandler;
 import github.kratofl.kraos.player.PlayerData;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.event.HoverEvent;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.Random;
 
@@ -50,5 +47,8 @@ public class PlayerDeathListener implements Listener {
 
         PlayerData.setPlayersLastCoordinates(player, player.getLocation());
         event.deathMessage(deathMessage);
+
+        event.getDrops().removeAll(event.getDrops());
+        DeathChestHandler.spawnDeathChest(player);
     }
 }
