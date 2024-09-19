@@ -3,6 +3,7 @@ package github.kratofl.kraos.commands;
 import github.kratofl.kraos.Kraos;
 import github.kratofl.kraos.config.FileManager;
 import github.kratofl.kraos.player.PlayerData;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -28,18 +29,21 @@ public class HomeCommand implements CommandExecutor {
             return false;
         }
 
+        Player p = (Player) commandSender;
+
         if (args.length == 0) {
+            Location location = goToHome(p.getUniqueId(), "", p);
+            p.teleport(location);
             return true;
         }
 
-        Player p = (Player) commandSender;
-        String actionName = args[0];
+
         if (args.length != 1 && args.length != 2) {
             p.sendMessage(command.getName() + " <list>");
             p.sendMessage(command.getName() + " <add/delete> <Name>");
             return false;
         }
-
+        String actionName = args[0];
         if (args.length == 1) {
             if (actionName.equalsIgnoreCase("add") || actionName.equalsIgnoreCase("delete")) {
                 p.sendMessage(command.getName() + " <add/delete> <Name>");
@@ -54,8 +58,8 @@ public class HomeCommand implements CommandExecutor {
                 }
 
                 p.sendMessage("Your homes are:");
-                for (String homeName : homeNames) {
-                    p.sendMessage(homeName);
+                for (String playerHomeName : homeNames) {
+                    p.sendMessage(playerHomeName);
                 }
                 return true;
             }
@@ -143,22 +147,25 @@ public class HomeCommand implements CommandExecutor {
         File file = new File(Kraos.getPluginInstance().getDataFolder(), playerUUID.toString() + ".yml");
         FileConfiguration config = FileManager.loadConfig(file);
 
-        String worldName = config.getString(homeName + ".world");
-        if (worldName == null) {
-            p.sendMessage("Skill issue, world cant be found");
-            return null;
+        if(StringUtils.isEmpty(homeName) || StringUtils.isBlank(homeName)) {
+            homeName = getAllHomes(playerUUID).getFirst();
         }
+            String worldName = config.getString(homeName + ".world");
+            if (worldName == null) {
+                p.sendMessage("Skill issue, world cant be found");
+                return null;
+            }
 
-        World world = Bukkit.getWorld(worldName);
-        if (world == null) {
-            p.sendMessage("The world  " + worldName + " does not exist or skill issue");
-            return null;
-        }
+            World world = Bukkit.getWorld(worldName);
+            if (world == null) {
+                p.sendMessage("The world  " + worldName + " does not exist or skill issue");
+                return null;
+            }
 
-        double x = config.getDouble(homeName + ".x");
-        double y = config.getDouble(homeName + ".y");
-        double z = config.getDouble(homeName + ".z");
+            double x = config.getDouble(homeName + ".x");
+            double y = config.getDouble(homeName + ".y");
+            double z = config.getDouble(homeName + ".z");
 
-        return new Location(world, x, y, z);
+            return new Location(world, x, y, z);
     }
 }
