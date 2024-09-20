@@ -32,6 +32,7 @@ public class HomeCommand implements CommandExecutor {
         Player p = (Player) commandSender;
 
         if (args.length == 0) {
+            PlayerData.setPlayersLastCoordinates(p, p.getLocation());
             Location location = goToHome(p.getUniqueId(), "", p);
             p.teleport(location);
             return true;
@@ -53,7 +54,7 @@ public class HomeCommand implements CommandExecutor {
                 List<String> homeNames = getAllHomes(p.getUniqueId());
 
                 if (homeNames.isEmpty()) {
-                    p.sendMessage("Du wichser hast keine homes!");
+                    p.sendMessage("You have no homes!");
                     return true;
                 }
 
@@ -66,7 +67,6 @@ public class HomeCommand implements CommandExecutor {
 
             Location location = goToHome(p.getUniqueId(), actionName, p);
             if (location == null) {
-                p.sendMessage("There has been a problem with your home");
                 return true;
             }
             PlayerData.setPlayersLastCoordinates(p, p.getLocation());
@@ -152,13 +152,13 @@ public class HomeCommand implements CommandExecutor {
         }
             String worldName = config.getString(homeName + ".world");
             if (worldName == null) {
-                p.sendMessage("Skill issue, world cant be found");
+                p.sendMessage("You have no homes");
                 return null;
             }
 
             World world = Bukkit.getWorld(worldName);
             if (world == null) {
-                p.sendMessage("The world  " + worldName + " does not exist or skill issue");
+                p.sendMessage("The world  " + worldName + " does not exist");
                 return null;
             }
 

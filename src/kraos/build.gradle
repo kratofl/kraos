@@ -3,7 +3,8 @@ plugins {
 }
 
 group = 'github.kratofl'
-version = '1.0.0-SNAPSHOT+' + new Date().format('yyyyMMddHHmmss')
+//version = '1.0.0-SNAPSHOT+' + new Date().format('yyyyMMddHHmmss')
+version = '1.0.0+' + new Date().format('yyyyMMddHHmmss')
 
 repositories {
     mavenCentral()

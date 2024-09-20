@@ -16,7 +16,7 @@ public final class Kraos extends JavaPlugin {
         Bukkit.getPluginCommand("back").setExecutor(new BackCommand());
 
         getServer().getPluginManager().registerEvents(new PlayerDeathListener(), this);
-        getServer().getPluginManager().registerEvents(new BlockBreakListener(), this);
+        //getServer().getPluginManager().registerEvents(new BlockBreakListener(), this);
     }
 
     @Override

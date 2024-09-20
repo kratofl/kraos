@@ -3,6 +3,7 @@ package github.kratofl.kraos.deathchest;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -32,9 +33,8 @@ public class DeathChestHandler {
     }
 
     public static void spawnDeathChest(Player player) {
-        // if death point is highest, then replace block
-        // if died mid air
         Location deathLocation = player.getLocation();
+        World deahtLocationWorld = deathLocation.getWorld();
         Location deathChestLocation = getHighestVerticalLocationPossible(deathLocation);
         deathChestLocation.getBlock().setType(DeathChestModel.MATERIAL);
 
@@ -44,9 +44,14 @@ public class DeathChestHandler {
                 deathChestInventory.addItem(item);
         }
 
+        if (deathChestLocation.getWorld().getEnvironment() == World.Environment.NETHER) {
+            //boolean belowPlayerIsBedrock = deahtLocationWorld
+        }
+
         addDeathChest(new DeathChestModel(deathChestInventory, deathChestLocation, player));
         player.sendMessage("Your death chest has been spawned at: " + locationToString(deathChestLocation));
     }
+
     public static void destroyDeathChest(Location location, Player player) {
         Optional<DeathChestModel> deathChest = getDeathChest(location);
         if (deathChest.isEmpty()) {
@@ -61,11 +66,11 @@ public class DeathChestHandler {
 
         deathChestModel.getLocation().getBlock().setType(Material.AIR);
         ItemStack[] items = deathChestModel.getInventory().getContents();
-        for (int i = 0; i < items.length; i++) {
-            if (items[i] == null)
+        for (ItemStack item : items) {
+            if (item == null)
                 continue;
 
-            deathChestModel.getLocation().getWorld().dropItem(deathChestModel.getLocation(), items[i]);
+            deathChestModel.getLocation().getWorld().dropItem(deathChestModel.getLocation(), item);
         }
         removeDeathChest(deathChestModel);
     }
