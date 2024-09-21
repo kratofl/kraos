@@ -1,0 +1,15 @@
+name: kraosspigot
+version: ${pluginVersion}
+main: github.kratofl.kraosspigot.Kraos
+description: "Kraos"
+api-version: '1.21.1'
+authors: [Kratofl, Dm4urer]
+commands:
+  home:
+    description: "Command to teleport to player specific homes"
+    usage: "Usage: /home <list> | <add/delete> <Name>"
+    aliases: [ h ]
+  back:
+    description: "Teleport to the last location, where you teleported from"
+    usage: "Usage: /back"
+    aliases: [ b ]
