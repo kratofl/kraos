@@ -3,15 +3,14 @@ package github.kratofl.kraosspigot.commands;
 import github.kratofl.kraosspigot.Kraos;
 import github.kratofl.kraosspigot.config.FileManager;
 import github.kratofl.kraosspigot.player.PlayerData;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +31,7 @@ public class HomeCommand implements CommandExecutor {
             PlayerData.setPlayersLastCoordinates(p, p.getLocation());
             Location location = goToHome(p.getUniqueId(), "", p);
             p.teleport(location);
+            p.playSound(p, Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
             return true;
         }
 
@@ -68,6 +68,7 @@ public class HomeCommand implements CommandExecutor {
             }
             PlayerData.setPlayersLastCoordinates(p, p.getLocation());
             p.teleport(location);
+            p.playSound(p, Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
             p.sendMessage("You have been teleported to: " + actionName);
             return true;
 
@@ -85,8 +86,7 @@ public class HomeCommand implements CommandExecutor {
                 return true;
             }
 
-            saveHome(p.getUniqueId(), homeName, p.getLocation());
-            p.sendMessage("Home " + homeName + " gesetzt!");
+            saveHome(p, homeName, p.getLocation());
             return true;
         }
 
@@ -101,7 +101,14 @@ public class HomeCommand implements CommandExecutor {
         return false;
     }
 
-    private void saveHome(UUID playerUUID, String homeName, Location location) {
+    private void saveHome(Player player, String homeName, Location location) {
+        UUID playerUUID = player.getUniqueId();
+        List<String> allHomes = this.getAllHomes(playerUUID);
+        if (allHomes.size() >= 2) {
+            player.sendMessage(ChatColor.RED + "You have reached the maximum amount of homes " + ChatColor.BOLD + "(2)");
+            return;
+        }
+
         File file = new File(Kraos.getPluginInstance().getDataFolder(), playerUUID.toString() + ".yml");
         FileConfiguration config = FileManager.loadConfig(file);
 
@@ -110,6 +117,7 @@ public class HomeCommand implements CommandExecutor {
         config.set(homeName + ".z", location.getBlockZ());
         config.set(homeName + ".world", location.getWorld().getName());
         FileManager.saveConfig(config, file);
+        player.sendMessage("Home " + homeName + " gesetzt!");
     }
 
     private boolean doesHomeExist(UUID playerUUID, String homeName) {
@@ -121,9 +129,6 @@ public class HomeCommand implements CommandExecutor {
     private List<String> getAllHomes(UUID playerUUID) {
         File file = new File(Kraos.getPluginInstance().getDataFolder(), playerUUID.toString() + ".yml");
         FileConfiguration config = FileManager.loadConfig(file);
-
-        ArrayList<String> homes = new ArrayList<String>();
-
         return config.getConfigurationSection("").getKeys(false).stream().toList();
     }
 
@@ -147,22 +152,23 @@ public class HomeCommand implements CommandExecutor {
         if(homeName.equalsIgnoreCase("")) {
             homeName = getAllHomes(playerUUID).getFirst();
         }
-            String worldName = config.getString(homeName + ".world");
-            if (worldName == null) {
-                p.sendMessage("You have no homes");
-                return null;
-            }
 
-            World world = Bukkit.getWorld(worldName);
-            if (world == null) {
-                p.sendMessage("The world  " + worldName + " does not exist");
-                return null;
-            }
+        String worldName = config.getString(homeName + ".world");
+        if (worldName == null) {
+            p.sendMessage("You have no homes");
+            return null;
+        }
 
-            double x = config.getDouble(homeName + ".x");
-            double y = config.getDouble(homeName + ".y");
-            double z = config.getDouble(homeName + ".z");
+        World world = Bukkit.getWorld(worldName);
+        if (world == null) {
+            p.sendMessage("The world  " + worldName + " does not exist");
+            return null;
+        }
 
-            return new Location(world, x, y, z);
+        double x = config.getDouble(homeName + ".x");
+        double y = config.getDouble(homeName + ".y");
+        double z = config.getDouble(homeName + ".z");
+
+        return new Location(world, x, y, z);
     }
 }
