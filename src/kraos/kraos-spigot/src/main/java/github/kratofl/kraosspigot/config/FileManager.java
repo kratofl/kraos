@@ -1,4 +1,4 @@
-package github.kratofl.kraos.config;
+package github.kratofl.kraosspigot.config;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;

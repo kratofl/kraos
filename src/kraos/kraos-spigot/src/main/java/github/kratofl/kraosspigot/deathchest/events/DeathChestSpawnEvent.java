@@ -1,9 +1,8 @@
-package github.kratofl.kraos.deathchest.events;
+package github.kratofl.kraosspigot.deathchest.events;
 
-import github.kratofl.kraos.deathchest.DeathChestModel;
+import github.kratofl.kraosspigot.deathchest.DeathChestModel;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-import org.jetbrains.annotations.NotNull;
 
 public class DeathChestSpawnEvent extends Event {
 
@@ -19,7 +18,7 @@ public class DeathChestSpawnEvent extends Event {
     }
 
     @Override
-    public @NotNull HandlerList getHandlers() {
+    public HandlerList getHandlers() {
         return this.HANDLER_LIST;
     }
 }

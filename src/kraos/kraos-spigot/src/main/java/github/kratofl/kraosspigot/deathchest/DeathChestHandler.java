@@ -1,4 +1,4 @@
-package github.kratofl.kraos.deathchest;
+package github.kratofl.kraosspigot.deathchest;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -8,7 +8,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Optional;
 

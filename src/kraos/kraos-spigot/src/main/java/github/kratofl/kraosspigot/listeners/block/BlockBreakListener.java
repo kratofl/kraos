@@ -1,8 +1,7 @@
-package github.kratofl.kraos.listeners.block;
+package github.kratofl.kraosspigot.listeners.block;
 
-import github.kratofl.kraos.deathchest.DeathChestHandler;
-import github.kratofl.kraos.deathchest.DeathChestModel;
-import org.bukkit.Bukkit;
+import github.kratofl.kraosspigot.deathchest.DeathChestHandler;
+import github.kratofl.kraosspigot.deathchest.DeathChestModel;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

@@ -1,11 +1,9 @@
-package github.kratofl.kraos.deathchest;
+package github.kratofl.kraosspigot.deathchest;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.jetbrains.annotations.NotNull;
 
 public class DeathChestModel {
 
@@ -14,7 +12,7 @@ public class DeathChestModel {
     private final Player player;
     private final Inventory inventory;
     private final Location location;
-    public DeathChestModel(@NotNull Inventory inventory, Location location, Player player) {
+    public DeathChestModel(Inventory inventory, Location location, Player player) {
         this.player = player;
         this.inventory = inventory;
         this.location = location;

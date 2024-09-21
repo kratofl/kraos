@@ -1,20 +1,16 @@
-package github.kratofl.kraos.listeners.player;
+package github.kratofl.kraosspigot.listeners.player;
 
-import github.kratofl.kraos.deathchest.DeathChestHandler;
-import github.kratofl.kraos.player.PlayerData;
-import net.kyori.adventure.text.Component;
+import github.kratofl.kraosspigot.player.PlayerData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
-import java.util.Random;
-
 public class PlayerDeathListener implements Listener {
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
-        Player player = event.getPlayer();
+        Player player = event.getEntity();
         PlayerData.setPlayersLastCoordinates(player, player.getLocation());
 
 //        String[] deathMessages = {

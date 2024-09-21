@@ -1,17 +1,16 @@
-package github.kratofl.kraos.commands;
+package github.kratofl.kraosspigot.commands;
 
-import github.kratofl.kraos.player.PlayerData;
+import github.kratofl.kraosspigot.player.PlayerData;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 public class BackCommand implements CommandExecutor {
 
     @Override
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
+    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
         if (!(commandSender instanceof Player player)) {
             commandSender.sendMessage("Invalid sender!");
             return false;

@@ -1,6 +1,6 @@
-package github.kratofl.kraos.deathchest.listeners;
+package github.kratofl.kraosspigot.deathchest.listeners;
 
-import github.kratofl.kraos.deathchest.events.DeathChestDestroyEvent;
+import github.kratofl.kraosspigot.deathchest.events.DeathChestDestroyEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 

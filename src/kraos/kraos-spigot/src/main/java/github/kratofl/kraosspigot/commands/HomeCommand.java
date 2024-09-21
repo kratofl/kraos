@@ -1,9 +1,8 @@
-package github.kratofl.kraos.commands;
+package github.kratofl.kraosspigot.commands;
 
-import github.kratofl.kraos.Kraos;
-import github.kratofl.kraos.config.FileManager;
-import github.kratofl.kraos.player.PlayerData;
-import org.apache.commons.lang3.StringUtils;
+import github.kratofl.kraosspigot.Kraos;
+import github.kratofl.kraosspigot.config.FileManager;
+import github.kratofl.kraosspigot.player.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -12,18 +11,16 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 public class HomeCommand implements CommandExecutor {
 
     @Override
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
+    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
         if (!(commandSender instanceof Player)) {
             commandSender.sendMessage("Invalid sender!");
             return false;
@@ -147,7 +144,7 @@ public class HomeCommand implements CommandExecutor {
         File file = new File(Kraos.getPluginInstance().getDataFolder(), playerUUID.toString() + ".yml");
         FileConfiguration config = FileManager.loadConfig(file);
 
-        if(StringUtils.isEmpty(homeName) || StringUtils.isBlank(homeName)) {
+        if(homeName.equalsIgnoreCase("")) {
             homeName = getAllHomes(playerUUID).getFirst();
         }
             String worldName = config.getString(homeName + ".world");
