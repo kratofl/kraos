@@ -2,7 +2,9 @@ package github.kratofl.kraosspigot.logging;
 
 import github.kratofl.kraosspigot.Kraos;
 import github.kratofl.kraosspigot.config.BaseConfig;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 
 import java.util.logging.Level;
 
@@ -31,6 +33,11 @@ public class Logger {
     public static void debug(String msg) {
         if (BaseConfig.debugModeEnabled()) {
             LOGGER.info(BLUE + "[DEBUG] " + msg + RESET);
+
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                if (player.isOp())
+                    player.sendMessage(ChatColor.BLUE + "[DEBUG] " + msg);
+            }
         }
     }
 }

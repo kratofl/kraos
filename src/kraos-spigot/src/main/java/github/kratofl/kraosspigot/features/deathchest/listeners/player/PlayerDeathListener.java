@@ -12,8 +12,8 @@ public class PlayerDeathListener implements Listener {
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
 
-        DeathChest dc = new DeathChest(player.getLocation(), player);
-        dc.spawn(player.getLocation());
+        DeathChest dc = new DeathChest(player);
+        dc.spawn();
         event.getDrops().removeAll(event.getDrops());
     }
 }

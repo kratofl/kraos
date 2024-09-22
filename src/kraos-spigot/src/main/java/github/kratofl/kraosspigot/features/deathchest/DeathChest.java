@@ -7,10 +7,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Skull;
+import org.bukkit.block.data.Rotatable;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.lang.reflect.Constructor;
@@ -25,22 +30,29 @@ public class DeathChest {
 
     private final Player player;
     private final Inventory inventory;
-    private final Location location;
+    private final Location deathLocation;
+    private final Location chestLocation;
 
-    public DeathChest(Location location, Player player) {
+    public DeathChest(Player player) {
         this.player = player;
-        Inventory deathChestInventory = Bukkit.createInventory(null, 5 * 9);
-        for (ItemStack item : player.getInventory().getContents()) {
-            if (item != null)
-                deathChestInventory.addItem(item);
-        }
+        Inventory deathChestInventory = Bukkit.createInventory(null, 5*9, player.getName());
+        deathChestInventory.setContents(player.getInventory().getContents());
         deathChestInventory.addItem(this.getPlayerHead());
         this.inventory = deathChestInventory;
-        this.location = location;
+
+        Location playerLocation = player.getLocation();
+        this.deathLocation = new Location(player.getWorld(),
+                playerLocation.getX(),
+                playerLocation.getY(),
+                playerLocation.getZ(),
+                playerLocation.getYaw(),
+                0
+        );
+        this.chestLocation = LocationValidator.getSafeLocation(this.deathLocation);
     }
 
-    public Location getLocation() {
-        return this.location;
+    public Location getChestLocation() {
+        return this.chestLocation;
     }
 
     public Player getOwner() {
@@ -51,16 +63,22 @@ public class DeathChest {
         return Material.PLAYER_HEAD;
     }
 
-    public void spawn(Location location) {
-        this.setChestHead(location);
+    public void spawn() {
+        this.setChestHead();
         DeathChestHandler.addChest(this);
     }
 
-    private void setChestHead(Location location) {
-        Block block = location.getBlock();
+    private void setChestHead() {
+        Block block = this.chestLocation.getBlock();
         block.setType(Material.PLAYER_HEAD);
 
+        Logger.debug("Chest Loc: " + this.chestLocation);
         Skull skull = (Skull) block.getState();
+        Rotatable skullRotate = (Rotatable) block.getBlockData();
+
+        skullRotate.setRotation(DeathChest.getYawBlockFace(this.chestLocation.getYaw()).getOppositeFace());
+        skull.setBlockData(skullRotate);
+
         GameProfile gameProfile = new GameProfile(UUID.randomUUID(), "");
         gameProfile.getProperties().put("textures", new Property("textures", CHEST_TEXTURE));
         Logger.debug(gameProfile.toString());
@@ -68,21 +86,15 @@ public class DeathChest {
         try {
             Field profileField = skull.getClass().getDeclaredField("profile");
             profileField.setAccessible(true);
-            Logger.debug(profileField.toString());
 
             Class<?> profileType = profileField.getType();
-            Logger.debug(profileType.toString());
             if (profileType.getSimpleName().equals("ResolvableProfile")) {
                 Constructor<?> constructor = profileType.getConstructor(GameProfile.class);
-                Logger.debug(constructor.toString());
                 Object profile = constructor.newInstance(gameProfile);
-                Logger.debug(profile.toString());
                 profileField.set(skull, profile);
-                Logger.debug(profileField.toString());
             }
             else {
                 profileField.set(skull, gameProfile);
-                Logger.debug("ELSE: " + profileField.toString());
             }
         }
         catch (NoSuchFieldException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | InstantiationException exception) {
@@ -90,6 +102,24 @@ public class DeathChest {
             Logger.debug(exception.toString());
         }
         skull.update();
+    }
+    public static BlockFace getYawBlockFace(float yaw) {
+        float direction = yaw % 360;
+
+        if (direction < 0) {
+            direction += 360;
+        }
+
+        return switch (Math.round(direction / 45)) {
+            case 1 -> BlockFace.SOUTH_WEST;
+            case 2 -> BlockFace.WEST;
+            case 3 -> BlockFace.NORTH_WEST;
+            case 4 -> BlockFace.NORTH;
+            case 5 -> BlockFace.NORTH_EAST;
+            case 6 -> BlockFace.EAST;
+            case 7 -> BlockFace.SOUTH_EAST;
+            default -> BlockFace.SOUTH;
+        };
     }
 
     private void spawnHologram() {
@@ -101,7 +131,7 @@ public class DeathChest {
     }
 
     public void destroy() {
-        Optional<DeathChest> deathChest = DeathChestHandler.getChest(location);
+        Optional<DeathChest> deathChest = DeathChestHandler.getChest(chestLocation);
         if (deathChest.isEmpty()) {
             return;
         }
@@ -112,7 +142,7 @@ public class DeathChest {
             return;
         }
 
-        this.location.getBlock().setType(Material.AIR);
+        this.chestLocation.getBlock().setType(Material.AIR);
         DeathChestHandler.removeChest(deathChestModel);
     }
 

@@ -1,4 +1,11 @@
-debug: false
-
+# Section for Home settings
 home:
+  # Limit for how many homes a player is allowed to have
   limit: 2
+
+# Debug mode:
+# This mode shows detailed log messages in the console and to all players who are an Operator
+# If you don't want your chat or your console to be spamed, then leave it disabled
+# If you run into an error:
+# You can activate the debug mode, to give us more information about the error
+# debug: true

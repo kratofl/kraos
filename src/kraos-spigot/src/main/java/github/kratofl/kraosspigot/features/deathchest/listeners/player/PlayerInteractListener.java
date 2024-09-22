@@ -2,6 +2,7 @@ package github.kratofl.kraosspigot.features.deathchest.listeners.player;
 
 import github.kratofl.kraosspigot.features.deathchest.DeathChest;
 import github.kratofl.kraosspigot.features.deathchest.DeathChestHandler;
+import github.kratofl.kraosspigot.logging.Logger;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -17,12 +18,12 @@ public class PlayerInteractListener implements Listener {
 
         if (block == null)
             return;
-        if (block.getType() != DeathChest.getChestMaterial())
-            return;
-
-        if (DeathChestHandler.blockIsDeathChest(block.getLocation())) {
-            Optional<DeathChest> dc = DeathChestHandler.getChest(block.getLocation());
-            dc.get().open(event.getPlayer());
+        if (block.getType() == DeathChest.getChestMaterial()) {
+            Logger.debug("[PlayerInteractEvent] " + block.getLocation());
+            if (DeathChestHandler.blockIsDeathChest(block.getLocation())) {
+                Optional<DeathChest> dc = DeathChestHandler.getChest(block.getLocation());
+                dc.get().open(event.getPlayer());
+            }
         }
     }
 }
