@@ -11,4 +11,7 @@ import java.util.stream.Collectors;
 
 public class InventorySort {
     public static final ClickType BUTTON_TO_SORT = ClickType.MIDDLE;
+
+    public static void sortInventory(Inventory inventoryToSort) {
+    }
 }
