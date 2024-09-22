@@ -1,4 +1,4 @@
-package github.kratofl.kraosspigot.deathchest;
+package github.kratofl.kraosspigot.features.deathchest;
 
 import org.bukkit.Location;
 import org.bukkit.Material;

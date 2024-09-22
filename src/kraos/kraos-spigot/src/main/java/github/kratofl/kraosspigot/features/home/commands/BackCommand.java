@@ -1,6 +1,6 @@
-package github.kratofl.kraosspigot.commands;
+package github.kratofl.kraosspigot.features.home.commands;
 
-import github.kratofl.kraosspigot.player.PlayerData;
+import github.kratofl.kraosspigot.features.home.player.PlayerData;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

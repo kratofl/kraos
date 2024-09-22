@@ -1,8 +1,10 @@
-package github.kratofl.kraosspigot.commands;
+package github.kratofl.kraosspigot.features.home.commands;
 
 import github.kratofl.kraosspigot.Kraos;
+import github.kratofl.kraosspigot.config.BaseConfig;
 import github.kratofl.kraosspigot.config.FileManager;
-import github.kratofl.kraosspigot.player.PlayerData;
+import github.kratofl.kraosspigot.features.home.config.HomeConfig;
+import github.kratofl.kraosspigot.features.home.player.PlayerData;
 import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -10,9 +12,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import java.awt.*;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -104,8 +104,8 @@ public class HomeCommand implements CommandExecutor {
     private void saveHome(Player player, String homeName, Location location) {
         UUID playerUUID = player.getUniqueId();
         List<String> allHomes = this.getAllHomes(playerUUID);
-        if (allHomes.size() >= 2) {
-            player.sendMessage(ChatColor.RED + "You have reached the maximum amount of homes " + ChatColor.BOLD + "(2)");
+        if (allHomes.size() >= HomeConfig.getHomeLimit()) {
+            player.sendMessage(ChatColor.RED + "You have reached the maximum amount of homes " + ChatColor.BOLD + "(" + HomeConfig.getHomeLimit() + ")");
             return;
         }
 
@@ -149,7 +149,7 @@ public class HomeCommand implements CommandExecutor {
         File file = new File(Kraos.getPluginInstance().getDataFolder(), playerUUID.toString() + ".yml");
         FileConfiguration config = FileManager.loadConfig(file);
 
-        if(homeName.equalsIgnoreCase("")) {
+        if (homeName.equalsIgnoreCase("")) {
             homeName = getAllHomes(playerUUID).getFirst();
         }
 

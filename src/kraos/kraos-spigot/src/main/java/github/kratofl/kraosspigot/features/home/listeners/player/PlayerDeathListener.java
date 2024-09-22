@@ -1,6 +1,6 @@
-package github.kratofl.kraosspigot.listeners.player;
+package github.kratofl.kraosspigot.features.home.listeners.player;
 
-import github.kratofl.kraosspigot.player.PlayerData;
+import github.kratofl.kraosspigot.features.home.player.PlayerData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

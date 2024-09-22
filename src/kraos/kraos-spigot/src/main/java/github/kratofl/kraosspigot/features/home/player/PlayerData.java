@@ -1,4 +1,4 @@
-package github.kratofl.kraosspigot.player;
+package github.kratofl.kraosspigot.features.home.player;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
